@@ -1,30 +1,34 @@
-import React, { useState } from "react";
-
-interface FormState {
-  form: Sub;
-}
+import React from "react";
+import useNewSubForm from "./useNewSubForm";
 
 interface FormProps {
   onNewSub: (newSub: Sub) => void;
 }
 
+type InputsForm = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+
 export default function Form({ onNewSub }: FormProps) {
-  const [form, setForm] = useState<FormState["form"]>({
-    nick: "",
-    subMonths: 0,
-    avatar: "",
-    description: "",
-  });
+  //const [form, setForm] = useState<FormState["form"]>(InitialState);
+  const [form, dispatch] = useNewSubForm();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onNewSub(form);
+    handleClear();
   };
 
-  const handleOnChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleOnChange = (e: InputsForm) => {
+    dispatch({
+      type: "CHANGE_VALUE",
+      payload: {
+        inputName: e.target.name,
+        inputValue: e.target.value,
+      },
+    });
+  };
+
+  const handleClear = () => {
+    dispatch({ type: "CLEAR" });
   };
 
   return (
@@ -57,7 +61,7 @@ export default function Form({ onNewSub }: FormProps) {
           onChange={(e) => handleOnChange(e)}
           placeholder="Description..."
         />
-        <button>Save new Sub</button>
+        <button type="submit">Save new Sub</button>
       </form>
     </div>
   );

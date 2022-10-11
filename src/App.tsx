@@ -7,17 +7,8 @@ interface AppState {
   subs: Sub[];
 }
 
-const initialState = [
-  {
-    nick: "sergio_serrano",
-    avatar: "https://i.pravatar.cc/150?u=sergio_serrano",
-    subMonths: 1,
-    description: "asdasdasd",
-  },
-];
-
 function App() {
-  const [subs, setSubs] = useState<AppState["subs"]>(initialState);
+  const [subs, setSubs] = useState<AppState["subs"]>([]);
 
   const handleNewSub = (newSub: Sub): void => {
     setSubs([...subs, newSub]);
@@ -25,8 +16,8 @@ function App() {
 
   return (
     <div>
-      <ListSubs subs={subs} />
       <Form onNewSub={handleNewSub} />
+      <ListSubs subs={subs} />
     </div>
   );
 }
